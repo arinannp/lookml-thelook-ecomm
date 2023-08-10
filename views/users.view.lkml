@@ -90,6 +90,7 @@ view: users {
         when ${country} in ("Spain","France","United Kingdom","Germany","Belgium","Poland","Austria","España") then "Europe"
         when ${country} in ("Brasil","United States","Colombia") then "America"
       end ;;
+    required_access_grants: [can_view_continent_dimension]
   }
 
   dimension: latitude {

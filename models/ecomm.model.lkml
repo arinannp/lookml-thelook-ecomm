@@ -19,6 +19,16 @@ datagroup: ecomm_default_datagroup {
 
 persist_with: ecomm_default_datagroup
 
+access_grant: can_view_events_explore {
+  user_attribute: view_events_and_continent
+  allowed_values: ["admin","events"]
+}
+
+access_grant: can_view_continent_dimension {
+  user_attribute: view_events_and_continent
+  allowed_values: ["admin","continent"]
+}
+
 # Explores allow you to join together different views (database tables) based on the
 # relationships between fields. By joining a view into an Explore, you make those
 # fields available to users for data analysis.
@@ -33,6 +43,8 @@ persist_with: ecomm_default_datagroup
 explore: events {
   group_label: "Ecommerce"
   description: "Explore about orders and events!"
+
+  required_access_grants: [can_view_events_explore]
 }
 
 explore: order_items {
@@ -74,7 +86,6 @@ explore: order_items {
     sql_on: ${products.distribution_center_id} = ${distribution_centers.id} ;;
     relationship: many_to_one
   }
-
 }
 
 # explore: users {}
