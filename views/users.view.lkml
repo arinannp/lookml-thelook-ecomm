@@ -82,6 +82,16 @@ view: users {
     sql: ${TABLE}.country ;;
   }
 
+  dimension: continent {
+    type: string
+    sql:
+      case
+        when ${country} in ("Japan","China","South Korea","Australia") then "Asia"
+        when ${country} in ("Spain","France","United Kingdom","Germany","Belgium","Poland","Austria","España") then "Europe"
+        when ${country} in ("Brasil","United States","Colombia") then "America"
+      end ;;
+  }
+
   dimension: latitude {
     type: number
     sql: ${TABLE}.latitude ;;

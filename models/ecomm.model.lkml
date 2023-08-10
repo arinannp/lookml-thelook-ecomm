@@ -40,6 +40,11 @@ explore: order_items {
   description: "Explore about orders and events!"
   persist_with: orders_datagroup
 
+  access_filter: {
+    field: users.continent
+    user_attribute: ecomm_country
+  }
+
   join: orders {
     type: left_outer
     sql_on: ${order_items.order_id} = ${orders.order_id} ;;
