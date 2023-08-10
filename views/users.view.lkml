@@ -13,47 +13,14 @@ view: users {
     type: number
     sql: ${TABLE}.id ;;
   }
-    # Here's what a typical dimension looks like in LookML.
-    # A dimension is a groupable field that can be used to filter query results.
-    # This dimension will be called "Age" in Explore.
 
-  dimension: age {
-    type: number
-    sql: ${TABLE}.age ;;
-  }
-
-  dimension: city {
-    type: string
-    sql: ${TABLE}.city ;;
-  }
-
-  dimension: country {
-    type: string
-    map_layer_name: countries
-    sql: ${TABLE}.country ;;
-  }
-  # Dates and timestamps can be represented in Looker using a dimension group of type: time.
-  # Looker converts dates and timestamps to the specified timeframes within the dimension group.
-
-  dimension_group: created {
-    type: time
-    timeframes: [raw, time, date, week, month, quarter, year]
-    sql: ${TABLE}.created_at ;;
-  }
-
-  dimension: email {
-    type: string
-    sql: ${TABLE}.email ;;
-  }
+  # Here's what a typical dimension looks like in LookML.
+  # A dimension is a groupable field that can be used to filter query results.
+  # This dimension will be called "Age" in Explore.
 
   dimension: first_name {
     type: string
     sql: ${TABLE}.first_name ;;
-  }
-
-  dimension: gender {
-    type: string
-    sql: ${TABLE}.gender ;;
   }
 
   dimension: last_name {
@@ -61,19 +28,32 @@ view: users {
     sql: ${TABLE}.last_name ;;
   }
 
-  dimension: latitude {
-    type: number
-    sql: ${TABLE}.latitude ;;
-  }
-
-  dimension: longitude {
-    type: number
-    sql: ${TABLE}.longitude ;;
-  }
-
-  dimension: postal_code {
+  dimension: full_name {
     type: string
-    sql: ${TABLE}.postal_code ;;
+    sql: concat(${first_name}, " ", ${last_name}) ;;
+  }
+
+  dimension: email {
+    type: string
+    sql: ${TABLE}.email ;;
+  }
+
+  dimension: age {
+    type: number
+    sql: ${TABLE}.age ;;
+  }
+
+  dimension: age_tier {
+    type: tier
+    # type: bin
+    sql: ${age} ;;
+    tiers: [0, 20, 40, 60, 100]
+    style: integer
+  }
+
+  dimension: gender {
+    type: string
+    sql: ${TABLE}.gender ;;
   }
 
   dimension: state {
@@ -86,10 +66,46 @@ view: users {
     sql: ${TABLE}.street_address ;;
   }
 
+  dimension: postal_code {
+    type: string
+    sql: ${TABLE}.postal_code ;;
+  }
+
+  dimension: city {
+    type: string
+    sql: ${TABLE}.city ;;
+  }
+
+  dimension: country {
+    type: string
+    map_layer_name: countries
+    sql: ${TABLE}.country ;;
+  }
+
+  dimension: latitude {
+    type: number
+    sql: ${TABLE}.latitude ;;
+  }
+
+  dimension: longitude {
+    type: number
+    sql: ${TABLE}.longitude ;;
+  }
+
   dimension: traffic_source {
     type: string
     sql: ${TABLE}.traffic_source ;;
   }
+
+  # Dates and timestamps can be represented in Looker using a dimension group of type: time.
+  # Looker converts dates and timestamps to the specified timeframes within the dimension group.
+
+  dimension_group: created {
+    type: time
+    timeframes: [raw, time, date, week, month, quarter, year]
+    sql: ${TABLE}.created_at ;;
+  }
+
   measure: count {
     type: count
     drill_fields: [detail*]
@@ -98,13 +114,13 @@ view: users {
   # ----- Sets of fields for drilling ------
   set: detail {
     fields: [
-	id,
-	last_name,
-	first_name,
-	events.count,
-	orders.count,
-	order_items.count
-	]
+  id,
+  last_name,
+  first_name,
+  events.count,
+  orders.count,
+  order_items.count
+  ]
   }
 
 }

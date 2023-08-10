@@ -13,41 +13,15 @@ view: events {
     type: number
     sql: ${TABLE}.id ;;
   }
-    # Here's what a typical dimension looks like in LookML.
-    # A dimension is a groupable field that can be used to filter query results.
-    # This dimension will be called "Browser" in Explore.
 
-  dimension: browser {
-    type: string
-    sql: ${TABLE}.browser ;;
-  }
+  # Here's what a typical dimension looks like in LookML.
+  # A dimension is a groupable field that can be used to filter query results.
+  # This dimension will be called "Browser" in Explore.
 
-  dimension: city {
-    type: string
-    sql: ${TABLE}.city ;;
-  }
-  # Dates and timestamps can be represented in Looker using a dimension group of type: time.
-  # Looker converts dates and timestamps to the specified timeframes within the dimension group.
-
-  dimension_group: created {
-    type: time
-    timeframes: [raw, time, date, week, month, quarter, year]
-    sql: ${TABLE}.created_at ;;
-  }
-
-  dimension: event_type {
-    type: string
-    sql: ${TABLE}.event_type ;;
-  }
-
-  dimension: ip_address {
-    type: string
-    sql: ${TABLE}.ip_address ;;
-  }
-
-  dimension: postal_code {
-    type: string
-    sql: ${TABLE}.postal_code ;;
+  dimension: user_id {
+    type: number
+    # hidden: yes
+    sql: ${TABLE}.user_id ;;
   }
 
   dimension: sequence_number {
@@ -60,9 +34,38 @@ view: events {
     sql: ${TABLE}.session_id ;;
   }
 
+  # Dates and timestamps can be represented in Looker using a dimension group of type: time.
+  # Looker converts dates and timestamps to the specified timeframes within the dimension group.
+
+  dimension_group: created {
+    type: time
+    timeframes: [raw, time, date, week, month, quarter, year]
+    sql: ${TABLE}.created_at ;;
+  }
+
+  dimension: ip_address {
+    type: string
+    sql: ${TABLE}.ip_address ;;
+  }
+
+  dimension: city {
+    type: string
+    sql: ${TABLE}.city ;;
+  }
+
   dimension: state {
     type: string
     sql: ${TABLE}.state ;;
+  }
+
+  dimension: postal_code {
+    type: string
+    sql: ${TABLE}.postal_code ;;
+  }
+
+  dimension: browser {
+    type: string
+    sql: ${TABLE}.browser ;;
   }
 
   dimension: traffic_source {
@@ -75,13 +78,14 @@ view: events {
     sql: ${TABLE}.uri ;;
   }
 
-  dimension: user_id {
-    type: number
-    # hidden: yes
-    sql: ${TABLE}.user_id ;;
+  dimension: event_type {
+    type: string
+    sql: ${TABLE}.event_type ;;
   }
+
   measure: count {
     type: count
     drill_fields: [id, users.last_name, users.id, users.first_name]
   }
+
 }

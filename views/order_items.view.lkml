@@ -13,6 +13,40 @@ view: order_items {
     type: number
     sql: ${TABLE}.id ;;
   }
+
+  # Here's what a typical dimension looks like in LookML.
+  # A dimension is a groupable field that can be used to filter query results.
+  # This dimension will be called "Inventory Item ID" in Explore.
+
+  dimension: order_id {
+    type: number
+    # hidden: yes
+    sql: ${TABLE}.order_id ;;
+  }
+
+  dimension: user_id {
+    type: number
+    # hidden: yes
+    sql: ${TABLE}.user_id ;;
+  }
+
+  dimension: product_id {
+    type: number
+    # hidden: yes
+    sql: ${TABLE}.product_id ;;
+  }
+
+  dimension: inventory_item_id {
+    type: number
+    # hidden: yes
+    sql: ${TABLE}.inventory_item_id ;;
+  }
+
+  dimension: status {
+    type: string
+    sql: ${TABLE}.status ;;
+  }
+
   # Dates and timestamps can be represented in Looker using a dimension group of type: time.
   # Looker converts dates and timestamps to the specified timeframes within the dimension group.
 
@@ -22,31 +56,16 @@ view: order_items {
     sql: ${TABLE}.created_at ;;
   }
 
+  dimension_group: shipped {
+    type: time
+    timeframes: [raw, time, date, week, month, quarter, year]
+    sql: ${TABLE}.shipped_at ;;
+  }
+
   dimension_group: delivered {
     type: time
     timeframes: [raw, time, date, week, month, quarter, year]
     sql: ${TABLE}.delivered_at ;;
-  }
-    # Here's what a typical dimension looks like in LookML.
-    # A dimension is a groupable field that can be used to filter query results.
-    # This dimension will be called "Inventory Item ID" in Explore.
-
-  dimension: inventory_item_id {
-    type: number
-    # hidden: yes
-    sql: ${TABLE}.inventory_item_id ;;
-  }
-
-  dimension: order_id {
-    type: number
-    # hidden: yes
-    sql: ${TABLE}.order_id ;;
-  }
-
-  dimension: product_id {
-    type: number
-    # hidden: yes
-    sql: ${TABLE}.product_id ;;
   }
 
   dimension_group: returned {
@@ -55,45 +74,56 @@ view: order_items {
     sql: ${TABLE}.returned_at ;;
   }
 
+  dimension_group: duration_shipping {
+    type: duration
+    intervals: [second, minute, hour, day, week, month, quarter, year]
+    sql_start: ${TABLE}.created_at ;;
+    sql_end: ${TABLE}.shipped_at ;;
+  }
+
+  dimension_group: duration_delivering {
+    type: duration
+    intervals: [day, week, month, quarter, year]
+    sql_start: ${shipped_date} ;;
+    sql_end: ${delivered_date} ;;
+  }
+
+  dimension_group: duration_accepted_by_user {
+    type: duration
+    intervals: [day, week, month, quarter, year]
+    sql_start: ${created_date} ;;
+    sql_end: ${delivered_date} ;;
+  }
+
   dimension: sale_price {
     type: number
     sql: ${TABLE}.sale_price ;;
   }
 
-  dimension_group: shipped {
-    type: time
-    timeframes: [raw, time, date, week, month, quarter, year]
-    sql: ${TABLE}.shipped_at ;;
-  }
-
-  dimension: status {
-    type: string
-    sql: ${TABLE}.status ;;
-  }
-
-  dimension: user_id {
-    type: number
-    # hidden: yes
-    sql: ${TABLE}.user_id ;;
-  }
   measure: count {
     type: count
     drill_fields: [detail*]
   }
 
+  measure: total_sale_price {
+    type: sum
+    sql: ${sale_price} ;;
+    value_format_name: usd_0
+  }
+
   # ----- Sets of fields for drilling ------
   set: detail {
     fields: [
-	id,
-	users.last_name,
-	users.id,
-	users.first_name,
-	inventory_items.id,
-	inventory_items.product_name,
-	products.name,
-	products.id,
-	orders.order_id
-	]
+  id,
+  users.last_name,
+  users.id,
+  users.first_name,
+  inventory_items.id,
+  inventory_items.product_name,
+  products.name,
+  products.id,
+  orders.order_id
+  ]
   }
 
 }

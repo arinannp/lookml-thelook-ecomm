@@ -13,14 +13,17 @@ view: inventory_items {
     type: number
     sql: ${TABLE}.id ;;
   }
-    # Here's what a typical dimension looks like in LookML.
-    # A dimension is a groupable field that can be used to filter query results.
-    # This dimension will be called "Cost" in Explore.
 
-  dimension: cost {
+  # Here's what a typical dimension looks like in LookML.
+  # A dimension is a groupable field that can be used to filter query results.
+  # This dimension will be called "Cost" in Explore.
+
+  dimension: product_id {
     type: number
-    sql: ${TABLE}.cost ;;
+    # hidden: yes
+    sql: ${TABLE}.product_id ;;
   }
+
   # Dates and timestamps can be represented in Looker using a dimension group of type: time.
   # Looker converts dates and timestamps to the specified timeframes within the dimension group.
 
@@ -30,9 +33,15 @@ view: inventory_items {
     sql: ${TABLE}.created_at ;;
   }
 
-  dimension: product_brand {
-    type: string
-    sql: ${TABLE}.product_brand ;;
+  dimension_group: sold {
+    type: time
+    timeframes: [raw, time, date, week, month, quarter, year]
+    sql: ${TABLE}.sold_at ;;
+  }
+
+  dimension: cost {
+    type: number
+    sql: ${TABLE}.cost ;;
   }
 
   dimension: product_category {
@@ -40,25 +49,14 @@ view: inventory_items {
     sql: ${TABLE}.product_category ;;
   }
 
-  dimension: product_department {
-    type: string
-    sql: ${TABLE}.product_department ;;
-  }
-
-  dimension: product_distribution_center_id {
-    type: number
-    sql: ${TABLE}.product_distribution_center_id ;;
-  }
-
-  dimension: product_id {
-    type: number
-    # hidden: yes
-    sql: ${TABLE}.product_id ;;
-  }
-
   dimension: product_name {
     type: string
     sql: ${TABLE}.product_name ;;
+  }
+
+  dimension: product_brand {
+    type: string
+    sql: ${TABLE}.product_brand ;;
   }
 
   dimension: product_retail_price {
@@ -66,18 +64,36 @@ view: inventory_items {
     sql: ${TABLE}.product_retail_price ;;
   }
 
+  dimension: product_department {
+    type: string
+    sql: ${TABLE}.product_department ;;
+  }
+
   dimension: product_sku {
     type: string
     sql: ${TABLE}.product_sku ;;
   }
 
-  dimension_group: sold {
-    type: time
-    timeframes: [raw, time, date, week, month, quarter, year]
-    sql: ${TABLE}.sold_at ;;
+  dimension: product_distribution_center_id {
+    type: number
+    sql: ${TABLE}.product_distribution_center_id ;;
   }
+
   measure: count {
     type: count
     drill_fields: [id, product_name, products.name, products.id, order_items.count]
   }
+
+  measure: total_cost {
+    type: sum
+    sql: ${cost} ;;
+    value_format_name: usd_0
+  }
+
+  measure: total_product_retail_price {
+    type: sum
+    sql: ${product_retail_price} ;;
+    value_format_name: usd_0
+  }
+
 }

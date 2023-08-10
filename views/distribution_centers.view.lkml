@@ -13,9 +13,15 @@ view: distribution_centers {
     type: number
     sql: ${TABLE}.id ;;
   }
-    # Here's what a typical dimension looks like in LookML.
-    # A dimension is a groupable field that can be used to filter query results.
-    # This dimension will be called "Latitude" in Explore.
+
+  # Here's what a typical dimension looks like in LookML.
+  # A dimension is a groupable field that can be used to filter query results.
+  # This dimension will be called "Latitude" in Explore.
+
+  dimension: name {
+    type: string
+    sql: ${TABLE}.name ;;
+  }
 
   dimension: latitude {
     type: number
@@ -27,12 +33,9 @@ view: distribution_centers {
     sql: ${TABLE}.longitude ;;
   }
 
-  dimension: name {
-    type: string
-    sql: ${TABLE}.name ;;
-  }
   measure: count {
     type: count
     drill_fields: [id, name, products.count]
   }
+
 }
