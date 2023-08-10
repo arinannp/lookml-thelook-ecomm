@@ -7,9 +7,14 @@ include: "/views/**/*.view.lkml"
 # Datagroups define a caching policy for an Explore. To learn more,
 # use the Quick Help panel on the right to see documentation.
 
+datagroup: orders_datagroup {
+  sql_trigger: SELECT MAX(id) FROM `thelook_ecommerce.order_items`;;
+  max_cache_age: "24 hours"
+}
+
 datagroup: ecomm_default_datagroup {
   # sql_trigger: SELECT MAX(id) FROM etl_log;;
-  max_cache_age: "1 hour"
+  max_cache_age: "24 hours"
 }
 
 persist_with: ecomm_default_datagroup
@@ -25,77 +30,118 @@ persist_with: ecomm_default_datagroup
 # Typically, join parameters require that you define the join type, join relationship, and a sql_on clause.
 # Each joined view also needs to define a primary key.
 
-explore: users {}
-
 explore: events {
-  join: users {
-    type: left_outer 
-    sql_on: ${events.user_id} = ${users.id} ;;
-    relationship: many_to_one
-  }
-}
-
-explore: orders {
-  join: users {
-    type: left_outer 
-    sql_on: ${orders.user_id} = ${users.id} ;;
-    relationship: many_to_one
-  }
+  group_label: "Ecommerce"
+  description: "Explore about orders and events!"
 }
 
 explore: order_items {
-  join: users {
-    type: left_outer 
-    sql_on: ${order_items.user_id} = ${users.id} ;;
-    relationship: many_to_one
-  }
-
-  join: inventory_items {
-    type: left_outer 
-    sql_on: ${order_items.inventory_item_id} = ${inventory_items.id} ;;
-    relationship: many_to_one
-  }
-
-  join: products {
-    type: left_outer 
-    sql_on: ${order_items.product_id} = ${products.id} ;;
-    relationship: many_to_one
-  }
+  group_label: "Ecommerce"
+  description: "Explore about orders and events!"
+  persist_with: orders_datagroup
 
   join: orders {
-    type: left_outer 
+    type: left_outer
     sql_on: ${order_items.order_id} = ${orders.order_id} ;;
     relationship: many_to_one
   }
 
-  join: distribution_centers {
-    type: left_outer 
-    sql_on: ${products.distribution_center_id} = ${distribution_centers.id} ;;
+  join: users {
+    type: left_outer
+    sql_on: ${order_items.user_id} = ${users.id} ;;
     relationship: many_to_one
   }
-}
 
-explore: products {
-  join: distribution_centers {
-    type: left_outer 
-    sql_on: ${products.distribution_center_id} = ${distribution_centers.id} ;;
-    relationship: many_to_one
-  }
-}
-
-explore: distribution_centers {}
-
-explore: inventory_items {
   join: products {
-    type: left_outer 
-    sql_on: ${inventory_items.product_id} = ${products.id} ;;
+    type: left_outer
+    sql_on: ${order_items.product_id} = ${products.id} ;;
+    relationship: many_to_one
+  }
+
+  join: inventory_items {
+    type: left_outer
+    sql_on: ${order_items.inventory_item_id} = ${inventory_items.id} ;;
     relationship: many_to_one
   }
 
   join: distribution_centers {
-    type: left_outer 
+    type: left_outer
     sql_on: ${products.distribution_center_id} = ${distribution_centers.id} ;;
     relationship: many_to_one
   }
+
 }
 
+# explore: users {}
+
+# explore: events {
+#   join: users {
+#     type: left_outer
+#     sql_on: ${events.user_id} = ${users.id} ;;
+#     relationship: many_to_one
+#   }
+# }
+
+# explore: orders {
+#   join: users {
+#     type: left_outer
+#     sql_on: ${orders.user_id} = ${users.id} ;;
+#     relationship: many_to_one
+#   }
+# }
+
+# explore: order_items {
+#   join: users {
+#     type: left_outer
+#     sql_on: ${order_items.user_id} = ${users.id} ;;
+#     relationship: many_to_one
+#   }
+
+#   join: inventory_items {
+#     type: left_outer
+#     sql_on: ${order_items.inventory_item_id} = ${inventory_items.id} ;;
+#     relationship: many_to_one
+#   }
+
+#   join: products {
+#     type: left_outer
+#     sql_on: ${order_items.product_id} = ${products.id} ;;
+#     relationship: many_to_one
+#   }
+
+#   join: orders {
+#     type: left_outer
+#     sql_on: ${order_items.order_id} = ${orders.order_id} ;;
+#     relationship: many_to_one
+#   }
+
+#   join: distribution_centers {
+#     type: left_outer
+#     sql_on: ${products.distribution_center_id} = ${distribution_centers.id} ;;
+#     relationship: many_to_one
+#   }
+# }
+
+# explore: products {
+#   join: distribution_centers {
+#     type: left_outer
+#     sql_on: ${products.distribution_center_id} = ${distribution_centers.id} ;;
+#     relationship: many_to_one
+#   }
+# }
+
+# explore: distribution_centers {}
+
+# explore: inventory_items {
+#   join: products {
+#     type: left_outer
+#     sql_on: ${inventory_items.product_id} = ${products.id} ;;
+#     relationship: many_to_one
+#   }
+
+#   join: distribution_centers {
+#     type: left_outer
+#     sql_on: ${products.distribution_center_id} = ${distribution_centers.id} ;;
+#     relationship: many_to_one
+#   }
+# }
