@@ -26,7 +26,7 @@ access_grant: can_view_events_explore {
 
 access_grant: can_view_users_view {
   user_attribute: view_events_users_and_continent
-  allowed_values: ["admin","users"]
+  allowed_values: ["admin","users","continent"]
 }
 
 access_grant: can_view_continent_dimension {
