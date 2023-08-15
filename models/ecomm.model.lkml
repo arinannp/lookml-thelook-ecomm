@@ -20,12 +20,17 @@ datagroup: ecomm_default_datagroup {
 persist_with: ecomm_default_datagroup
 
 access_grant: can_view_events_explore {
-  user_attribute: view_events_and_continent
+  user_attribute: view_events_users_and_continent
   allowed_values: ["admin","events"]
 }
 
+access_grant: can_view_users_view {
+  user_attribute: view_events_users_and_continent
+  allowed_values: ["admin","users"]
+}
+
 access_grant: can_view_continent_dimension {
-  user_attribute: view_events_and_continent
+  user_attribute: view_events_users_and_continent
   allowed_values: ["admin","continent"]
 }
 
@@ -42,14 +47,13 @@ access_grant: can_view_continent_dimension {
 
 explore: events {
   group_label: "Ecommerce"
-  description: "Explore about orders and events!"
-
+  description: "Explore about events!"
   required_access_grants: [can_view_events_explore]
 }
 
 explore: order_items {
   group_label: "Ecommerce"
-  description: "Explore about orders and events!"
+  description: "Explore about orders!"
   persist_with: orders_datagroup
 
   access_filter: {
