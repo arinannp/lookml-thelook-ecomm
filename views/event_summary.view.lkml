@@ -18,7 +18,9 @@ view: event_summary {
       column: user_country { field: users.country }
       column: user_city { field: users.city }
     }
+    datagroup_trigger: orders_datagroup
   }
+
   dimension: session_id {
     description: ""
   }

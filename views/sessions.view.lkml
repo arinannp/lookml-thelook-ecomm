@@ -10,9 +10,9 @@ view: sessions {
             ,LAST_VALUE (event_type) OVER (PARTITION BY session_id ORDER BY created_at ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS session_exit_page
           FROM `ps-int-datateamrnd-22072022.thelook_ecommerce.events`
         )
-
       SELECT * FROM session_facts
       GROUP BY session_id, identifier, session_start, session_end, session_landing_page, session_exit_page ;;
+    datagroup_trigger: orders_datagroup
   }
 
   measure: count {
