@@ -49,7 +49,27 @@ explore: events {
   group_label: "Ecommerce"
   description: "Explore about events!"
   required_access_grants: [can_view_events_explore]
+
+  join: users {
+    type: left_outer
+    sql_on: ${events.user_id} = ${users.id} ;;
+    relationship: many_to_one
+  }
+
+  join: sessions {
+    type: left_outer
+    sql_on: ${events.session_id} = ${sessions.session_id} ;;
+    relationship: many_to_one
+  }
+
+  join: event_summary {
+    type: left_outer
+    sql_on: ${events.session_id} = ${event_summary.session_id} ;;
+    relationship: many_to_one
+  }
+
 }
+
 
 explore: order_items {
   group_label: "Ecommerce"
