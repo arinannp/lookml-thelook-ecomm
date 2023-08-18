@@ -111,6 +111,22 @@ explore: order_items {
     sql_on: ${products.distribution_center_id} = ${distribution_centers.id} ;;
     relationship: many_to_one
   }
+
+  join: users_products_orders_extend {
+    type: left_outer
+    sql_on: ${order_items.order_id} = ${users_products_orders_extend.order_id} ;;
+    relationship: many_to_one
+  }
+}
+
+explore: events_extend {
+  extends: [events]
+
+  join: events {
+    type: left_outer
+    sql_on: ${events_extend.id} = ${events.id} ;;
+    relationship: one_to_one
+  }
 }
 
 # explore: users {}
